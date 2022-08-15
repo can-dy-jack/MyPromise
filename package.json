@@ -1,0 +1,14 @@
+{
+  "name": "promiseaplus",
+  "version": "0.1.1",
+  "description": "promise A+ code",
+  "main": "index.js",
+  "scripts": {
+    "test": "promises-aplus-tests index.js"
+  },
+  "author": "can-dy-jack",
+  "license": "MIT",
+  "dependencies": {
+    "promises-aplus-tests": "^2.1.2"
+  }
+}
