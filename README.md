@@ -2,6 +2,9 @@
 
 > `Promise` 是一个优秀的异步解决方案，现在主流浏览器上都已经实现了对Promise的支持
 
+- function版本：[index.js](./index.js)
+- class版本：[main.js](./main.js)
+
 
 [Promises/A+ 规范](https://promisesaplus.com/) 译：
 

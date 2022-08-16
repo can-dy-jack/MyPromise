@@ -70,12 +70,12 @@ function ResolveMyPromise(promise,x,resolve,reject){
 MyPromise.prototype.then = function (resolveFn, rejectFn) {
     resolveFn = typeof resolveFn === 'function' ? resolveFn : val=>val;
     rejectFn = typeof rejectFn === 'function' ? rejectFn : e => { throw e };
-    let self = this, promise;
-    promise = new MyPromise( (resolve, reject) => {
+    let self = this, promise2;
+    promise2 = new MyPromise( (resolve, reject) => {
         if (self._status === 'fulfilled') {
             setTimeout(()=>{
                 try {
-                    ResolveMyPromise(promise, resolveFn(self._value) , resolve, reject);
+                    ResolveMyPromise(promise2, resolveFn(self._value) , resolve, reject);
                 } catch (e) {
                     reject(e);
                 }
@@ -84,7 +84,7 @@ MyPromise.prototype.then = function (resolveFn, rejectFn) {
         if (self._status === 'rejected') {
             setTimeout(()=>{
                 try {
-                    ResolveMyPromise(promise, rejectFn(self._reason), resolve, reject);
+                    ResolveMyPromise(promise2, rejectFn(self._reason), resolve, reject);
                 } catch (e) {
                     reject(e);
                 }
@@ -94,7 +94,7 @@ MyPromise.prototype.then = function (resolveFn, rejectFn) {
             self._resolveQueue.push(() => {
                 setTimeout(()=>{
                     try {
-                        ResolveMyPromise(promise, resolveFn(self._value), resolve, reject);
+                        ResolveMyPromise(promise2, resolveFn(self._value), resolve, reject);
                     } catch (e) {
                         reject(e);
                     }
@@ -103,7 +103,7 @@ MyPromise.prototype.then = function (resolveFn, rejectFn) {
             self._rejectQueue.push(() => {
                 setTimeout(()=>{
                     try {
-                        ResolveMyPromise(promise, rejectFn(self._reason), resolve, reject);
+                        ResolveMyPromise(promise2, rejectFn(self._reason), resolve, reject);
                     } catch (e) {
                         reject(e);
                     }
@@ -111,7 +111,7 @@ MyPromise.prototype.then = function (resolveFn, rejectFn) {
             });
         }
     });
-    return promise;
+    return promise2;
 }
 //catch方法其实就是执行一下then的第二个回调
 MyPromise.prototype.catch = function (rejectFn) {

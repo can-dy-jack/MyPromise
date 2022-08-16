@@ -4,7 +4,8 @@
   "description": "promise A+ code",
   "main": "index.js",
   "scripts": {
-    "test": "promises-aplus-tests index.js"
+    "test": "promises-aplus-tests index.js",
+    "dev": "promises-aplus-tests main.js"
   },
   "author": "can-dy-jack",
   "license": "MIT",
