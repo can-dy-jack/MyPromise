@@ -39,38 +39,38 @@ function ResolveMyPromise(promise,x,resolve,reject){
     if(promise === x){  // promise 和 x 指向同一个对象
         return reject(new TypeError('chaining cycle'));
     }
-    let called;
+    let hasCalled = false;
     if(x !== null && (typeof x === 'object' || typeof x === 'function')){
         try{
-            let then = x.then; 
-            if(typeof then === 'function'){
-                then.call(x,y=>{ 
-                    if(called) return; 
-                    called = true;
-                    ResolveMyPromise(promise, y, resolve, reject);
-                },err=>{ 
-                    if(called) return;
-                    called = true;
-                    reject(err);
+            let fn = x.then; 
+            if(typeof fn === 'function'){
+                // 使用 call 保持this指向
+                fn.call(x, a => { 
+                    if(hasCalled) return; 
+                    hasCalled = true;
+                    ResolveMyPromise(promise, a, resolve, reject);
+                },e => { 
+                    if(hasCalled) return;
+                    hasCalled = true;
+                    reject(e);
                 });
             }else{
                 resolve(x);
             }
-        }catch(e){
-            if(called) return;
-            called = true;
+        } catch(e) {
+            if(hasCalled) return;
+            hasCalled = true;
             reject(e);
         }
-    }else{ 
+    } else { 
         resolve(x);
     }
 }
 // 加在原型链上的方法 - 实例化的对象都共用
 MyPromise.prototype.then = function (resolveFn, rejectFn) {
-    resolveFn = typeof resolveFn === 'function'?resolveFn:val=>val;
-    rejectFn = typeof rejectFn === 'function'?rejectFn: e => { throw e }
-    let self = this;
-    let promise;
+    resolveFn = typeof resolveFn === 'function' ? resolveFn : val=>val;
+    rejectFn = typeof rejectFn === 'function' ? rejectFn : e => { throw e };
+    let self = this, promise;
     promise = new MyPromise( (resolve, reject) => {
         if (self._status === 'fulfilled') {
             setTimeout(()=>{
@@ -113,6 +113,23 @@ MyPromise.prototype.then = function (resolveFn, rejectFn) {
     });
     return promise;
 }
+//catch方法其实就是执行一下then的第二个回调
+MyPromise.prototype.catch = function (rejectFn) {
+    return this.then(null, rejectFn)
+} 
+// 在promise结束时，无论结果是fulfilled或者是rejected，都会执行指定的回调函数。
+// 在finally之后，还可以继续then。并且会将值原封不动的传递给后面的then
+MyPromise.prototype.finally = function(callback) {
+    return this.then(val => {
+        return MyPromise.resolve(callback()).then(() => val)
+    }, e => {
+        return MyPromise.reject(callback()).then(() => {
+            throw e;
+        })
+    })
+}
+
+
 // 加在属性上的方法 - 实例化的对象没有该方法，相当于OOP的静态方法
 MyPromise.resolve = (val) => {
     return new MyPromise((res, rej) => {
@@ -128,30 +145,29 @@ MyPromise.catch = function(onRejected) {
     return this.then(null, onRejected);
 }
 MyPromise.all = function(promises) {
-    return new Promise((resolve, reject) => {
-        let arr = [], i = 0;
-        /**
-         * @param {number} idx 
-         * @param {any} data 
-         */
-        function resolveData(idx, data) {
-            arr[idx] = data;
-            i++;
-            if(i ==promises.length) {
-                resolve(arr);
-            }
-        }
-        for(let j = 0;j<promises.length;j++) {
-            promises[i].then(data => {
-                resolveData(i, data);
-            },reject);
-        }
+    let i = 0, ans = [];
+    return new MyPromise((resolve, reject) => {
+        promises.forEach((promise, index) => {
+            MyPromise.resolve(promise).then(val => {
+                i++;
+                ans[index] = val;
+                if(i === promises.length) {
+                    resolve(ans);
+                }
+            }, e => {
+                reject(e);
+            })
+        })
     })
 }
 MyPromise.race = function(promises) {
     return new MyPromise((res, rej) => {
-        for(let i = 0;i<promises.length;i++) {
-            promises[i].then(res,rej);
+        for(const promise of promises) {
+            MyPromise.resolve(promise).then(val => {
+                res(val);
+            }, e => {
+                rej(e);
+            })
         }
     })
 }

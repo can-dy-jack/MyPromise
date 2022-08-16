@@ -104,5 +104,9 @@ promise.then(onFulfilled, onRejected)
 
 > 一共需要通过872条测试
 
-测试过程输出的信息过多，可以考虑输出信息到文件（重定向到文件 `> filename` | `>> filename`）
+测试过程输出的信息过多，可以考虑输出信息到文件（重定向到文件 `> pass.log`）
 
+## 参考资料
+
+- [掘金 - 9k字 | Promise/async/Generator实现原理解析](https://juejin.cn/post/6844904096525189128)
+- [github - iamswr/promiseAplus](https://github.com/iamswr/promiseAplus)
