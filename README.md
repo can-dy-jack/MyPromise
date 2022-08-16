@@ -2,7 +2,7 @@
 
 > `Promise` 是一个优秀的异步解决方案，现在主流浏览器上都已经实现了对Promise的支持
 
-> 以下方法都不在`Promise/A+`里面，但是是`ES6`的官方`Promise`的`API`里，且这些API基本都是`Promise/A+`的封装。
+> 以下方法都不在`Promise/A+`里面，但是是在`ES6`的官方`Promise`的`API`里，且这些API都是对其的封装。  
 > `Promise.resolve`  
 > `Promise.reject`  
 > `Promise.all`  
@@ -10,6 +10,9 @@
 > `Promise.prototype.catch`  
 > `Promise.prototype.finally`  
 
+## 实现
+
+本仓库使用两种方法实现：
 - function版本：[index.js](./index.js)
 - class版本：[main.js](./main.js)
 
