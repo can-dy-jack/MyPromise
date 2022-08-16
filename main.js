@@ -102,9 +102,57 @@ class NewPromise {
             resolve(x);
         }
     }
+    // more
+    catch(rejectFn) {
+        return this.then(null, rejectFn)
+    }
+    finally(callback) {
+        return this.then(
+            value => NewPromise.resolve(callback()).then(() => value), 
+            reason => NewPromise.resolve(callback()).then(() => { throw reason })
+        )
+    }
+    static resolve(value) {
+        return new NewPromise((resolve, reject) => resolve(value))
+    }
+    static reject(reason) {
+        return new NewPromise((resolve, reject) => reject(reason))
+    }
+    static all(promiseArr) {
+        let index = 0
+        let result = []
+        return new NewPromise((resolve, reject) => {
+        promiseArr.forEach((p, i) => {
+            NewPromise.resolve(p).then(val => {
+                index++
+                result[i] = val
+                if(index === promiseArr.length) {
+                    resolve(result)
+                }
+            },
+            reason => {
+                reject(reason)
+            })
+        })
+        })
+    }
+    static race(promiseArr) {
+        return new NewPromise((resolve, reject) => {
+          for (let p of promiseArr) {
+            NewPromise.resolve(p).then(value => {
+                resolve(value)
+            },
+            reason => {
+                reject(reason)
+            })
+          }
+        })
+    }
 }
 
-
+/**
+ * promises-tests测试
+ */
 NewPromise.defer = NewPromise.deferred = function(){
     let dfd = {};
     dfd.promise = new NewPromise((resolve,reject)=>{
@@ -114,4 +162,3 @@ NewPromise.defer = NewPromise.deferred = function(){
     return dfd;
 }
 module.exports = NewPromise;
-

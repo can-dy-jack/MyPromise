@@ -1,5 +1,5 @@
 
-> mypromise@0.1.1 dev F:\web\promiseAPlus
+> mypromise@1.0.0 dev F:\web\promiseAPlus
 > promises-aplus-tests main.js
 
 
@@ -1420,5 +1420,5 @@
       √ eventually-rejected
 
 
-  872 passing (46s)
+  872 passing (47s)
 
