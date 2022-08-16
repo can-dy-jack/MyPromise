@@ -98,3 +98,11 @@ promise.then(onFulfilled, onRejected)
 6. 实现方式中不应当在 `thenbale` 链中的深度设置主观的限制，并且不应当假设链的深度超过主观的限制后会是无限的。只有真正的循环才能导致`TypeError`。如果遇到由无限多个不同 `thenable` 组成的链，那么永远递归是正确的行为。
 
 
+## 测试
+
+使用到库：[promises-tests](https://github.com/promises-aplus/promises-tests)
+
+> 一共需要通过872条测试
+
+测试过程输出的信息过多，可以考虑输出信息到文件（重定向到文件 `> filename` | `>> filename`）
+
