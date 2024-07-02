@@ -1,15 +1,15 @@
 {
   "name": "mypromise",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "promise A+ code",
-  "main": "index.js",
+  "main": "lib/class/index.js",
   "scripts": {
-    "test": "promises-aplus-tests index.js",
-    "dev": "promises-aplus-tests main.js"
+    "test:class": "promises-aplus-tests lib/class/index.js > log/class.log",
+    "test:func": "promises-aplus-tests lib/function/index.js > log/func.log"
   },
   "author": "can-dy-jack",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "promises-aplus-tests": "^2.1.2"
   }
 }
